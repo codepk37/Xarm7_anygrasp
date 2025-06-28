@@ -1,0 +1,14 @@
+{
+    "version": "3.1.0",
+    "feature_id": "6869097311822547005",
+    "public_key": "PavanKarke.public_key",
+    "signature": "PavanKarke.signature",
+    "license": "PavanKarke.lic",
+    "toolbox": [
+        {
+            "name": "Basic",
+            "type": "PERMANENT",
+            "data": ""
+        }
+    ]
+}
