@@ -8,7 +8,7 @@ conda activate /media/pavan/STORAGE/linux_storage/anygrasp_sdk/py3-mink
 
 Run to get grasp in base frame (internally grasp in cam->endeff frame ,  endeff frame -> base frame)
 
-python real_life.py --checkpoint_path log/checkpoint_detection.tar
+python[real_life](real_life.py) --checkpoint_path log/checkpoint_detection.tar
 
 NOTE: if u change end-effector position, update this after checking "ufactory studio" 
 T_cam_wrt_base = compute_camera_wrt_base(
