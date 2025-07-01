@@ -23,7 +23,7 @@ align = rs.align(align_to)
 
 try:
     print("Capturing frame...")
-    for _ in range(10):  # Skip initial unstable frames
+    for _ in range(100):  # Skip initial unstable frames
         pipeline.wait_for_frames()
 
     frames = pipeline.wait_for_frames()

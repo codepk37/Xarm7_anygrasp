@@ -70,8 +70,9 @@ def compute_camera_wrt_base(roll, pitch, yaw, x_mm, y_mm, z_mm):
 
 # Example usage
 T_cam_wrt_base = compute_camera_wrt_base(
-    roll=-175.6, pitch=-37, yaw=-0.6,
-    x_mm=179.6, y_mm=89.1, z_mm=314.6
+    x_mm=179.6, y_mm=89.1, z_mm=314.6,
+    roll=-175.6, pitch=-37, yaw=-0.6
+
 )
 
 print("T_cam_wrt_base is", T_cam_wrt_base)
@@ -181,7 +182,7 @@ def demo(data_dir):
 
 
 
-    gripper_output_subfolder = f"./real_life_output/{data_dir}"
+    gripper_output_subfolder = f"./{data_dir}"
     os.makedirs(gripper_output_subfolder, exist_ok=True)
 
     translations =[]
@@ -250,7 +251,7 @@ def demo(data_dir):
 
 if __name__ == '__main__':
     
-    demo('./real_life/test1')
+    demo('./pavanoutput6')
 
 
 
