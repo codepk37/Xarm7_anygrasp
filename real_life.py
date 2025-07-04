@@ -5,6 +5,7 @@ import numpy as np
 import open3d as o3d
 from PIL import Image
 import time
+import random
 from gsnet import AnyGrasp
 from graspnetAPI import GraspGroup
 from scipy.spatial.transform import Rotation as R
@@ -70,8 +71,8 @@ def compute_camera_wrt_base(roll, pitch, yaw, x_mm, y_mm, z_mm):
 
 # Example usage
 T_cam_wrt_base = compute_camera_wrt_base(
-    x_mm=179.6, y_mm=89.1, z_mm=314.6,
-    roll=-175.6, pitch=-37, yaw=-0.6
+    x_mm=53.9 , y_mm=328 , z_mm=277.3,
+    roll=-175.7 , pitch=-62, yaw=-7.5
 
 )
 
@@ -92,8 +93,8 @@ def demo(data_dir):
     scale = 1000.0
 
     # set workspace to filter output grasps
-    xmin, xmax = -0.25, 0.2
-    ymin, ymax = -0.3, 0.2
+    xmin, xmax = -0.25, 0.25
+    ymin, ymax = -0.3, 0.25
     zmin, zmax = 0.0, 2
     lims = [xmin, xmax, ymin, ymax, zmin, zmax]
 
@@ -172,9 +173,17 @@ def demo(data_dir):
     else:
          print(len(gg),"tpatl grasp")
     gg = gg.nms().sort_by_score()
-    gg_pick = gg[0:20] #10
+    print("total grasps made ",len(gg))
+#top 
+    gg_pick = gg[0:] #10 top 10
 
-
+## random
+    # num_to_select = min(len(gg), 20)
+    # random_indices = random.sample(range(len(gg)), num_to_select)
+    # print(random_indices)
+    # gg_pick = gg[random_indices]
+###
+    
     pcds=[]
     gripper_points = []
     print("Top grasp scores:", gg_pick.scores)
