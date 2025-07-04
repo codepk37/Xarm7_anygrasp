@@ -125,8 +125,50 @@ for i, grasp in enumerate(grasps):
 
     # Apply the transformation
     gripper_o3d.transform(T_cam_wrt_base@ grasp)
+### filtering
+    theta = -np.pi / 2  # 90 degrees in radians
+    Rz_90 = np.array([
+        [np.cos(theta), -np.sin(theta), 0,0],
+        [np.sin(theta),  np.cos(theta), 0,0],
+        [0,              0,             1,0],[0,0,0,1]
+    ])
+    grasp_worldT = T_cam_wrt_base@ grasp 
+
+    ##
+    R_mat_XG = grasp_worldT[:3, :3]  #xram gripper
+    T_mat_XG = grasp_worldT[:3, 3] 
+    # Swap Y and Z axes
+    R_mat_XG[:, [1, 2]] = R_mat_XG[:, [2, 1]]
+    R_mat_XG[:, 0] *= -1
+
+    theta = -np.pi / 2  # 90 degrees in radians
+    Rz_90 = np.array([
+        [np.cos(theta), -np.sin(theta), 0],
+        [np.sin(theta),  np.cos(theta), 0],
+        [0,              0,             1]
+    ])
+    R_mat_XG = R_mat_XG @Rz_90
+    T = np.eye(4)
+    T[:3, :3] = R_mat_XG  
+    T[:3, 3] =T_mat_XG
+    ##
+    axis_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.05)
+    axis_frame.transform(T)
+    
+    approach_vector = T[:3, 2]  # z-axis in world frame
+    # World z-axis
+    world_z = np.array([0, 0, -1])
+    # Compute angle between approach and world Z-axis
+    cos_theta = np.dot(approach_vector, world_z) / (np.linalg.norm(approach_vector))
+    angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
+    print(i , "   ",angle_deg)
+    # Filter: keep only top-down grasps
+    if angle_deg >30 :
+        continue  # Skip if not top-down
+###    
+    # geometries.append(axis_frame)
     geometries.append(gripper_o3d)
 
 # Show everything in Open3D visualizer
 axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5, origin=[0, 0, 0])
-o3d.visualization.draw_geometries(geometries+[pcd,axes])
+o3d.visualization.draw_geometries(geometries+[axes])
