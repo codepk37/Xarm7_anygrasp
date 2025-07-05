@@ -6,7 +6,7 @@
 
 import sys
 sys.path.append('DA2_tools')
-
+import random
 import numpy as np
 import h5py
 import open3d as o3d
@@ -79,7 +79,7 @@ T_cam_wrt_base = T_cam_wrt_base @rotation_matrix_z #coz image is expected to rot
 print("T_cam_wrt_base is", T_cam_wrt_base)
 
 
-basepath='/home/pavan/Desktop/RA_L/Anygrap_Xarm/antipodal/pavanoutput6/experiment_dir/registered_meshes/'
+basepath='/home/pavan/Desktop/RA_L/Anygrap_Xarm/real_life/yellow_cylinder/experiment_dir/registered_meshes/'
 
 # Load the object mesh
 obj_path = f'{basepath}0.obj'
@@ -101,12 +101,25 @@ rotation_matrix_z = np.array([
 pcd.transform(T_cam_wrt_base)
 # Load grasp transforms
 grasp_path = f"{basepath}0_decomposed_1.h5"
+
+
+# with h5py.File(grasp_path, 'r') as f:
+#     def print_structure(name, obj):
+#         if isinstance(obj, h5py.Group):
+#             print(f"Group: {name}")
+#         elif isinstance(obj, h5py.Dataset):
+#             print(f"Dataset: {name} — shape: {obj.shape}, dtype: {obj.dtype}")
+
+#     f.visititems(print_structure)
+
 grasps_data = h5py.File(grasp_path, 'r')
 grasps = grasps_data['grasps/transforms'][:].reshape(-1, 4, 4)
+end_points = grasps_data['grasps/end_points'][:]  # shape: (103, 2, 3)
 print(f"Loaded {len(grasps)} grasp transforms")
 
 # Create Open3D geometries
 geometries = [object_mesh]
+
 
 # Visualize only the first N grasps to avoid performance issues
 
@@ -152,7 +165,7 @@ for i, grasp in enumerate(grasps):
 
     ##grasp
     z_axis = R_mat_XG[:, 2]  # Local z-axis (gripper heading)
-    t_moved = T_mat_XG - 0.13 * z_axis #113 worked
+    t_moved = T_mat_XG - 0.08 * z_axis #113 worked
 
     T = np.eye(4)
     T[:3, :3] = R_mat_XG  
@@ -169,14 +182,17 @@ for i, grasp in enumerate(grasps):
     angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
     print(i , "   ",angle_deg)
     # Filter: keep only top-down grasps
-    if angle_deg >45 or t_moved[2]<0.15:
+    if  t_moved[2]<0.145:
         continue  # Skip if not top-down
 ###    
     geometries.append(axis_frame)
     geometries.append(gripper_o3d)
     selected_index.append(i)
 
+
+
 # Show everything in Open3D visualizer
 axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5, origin=[0, 0, 0])
 o3d.visualization.draw_geometries(geometries+[axes])
+random.shuffle(selected_index)
 print("seleced index of grasp ",selected_index)
