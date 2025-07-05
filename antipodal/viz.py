@@ -110,6 +110,7 @@ geometries = [object_mesh]
 
 # Visualize only the first N grasps to avoid performance issues
 
+selected_index=[]
 for i, grasp in enumerate(grasps):
     # Create a gripper mesh
     gripper_trimesh = create_robotiq_marker()
@@ -148,9 +149,14 @@ for i, grasp in enumerate(grasps):
         [0,              0,             1]
     ])
     R_mat_XG = R_mat_XG @Rz_90
+
+    ##grasp
+    z_axis = R_mat_XG[:, 2]  # Local z-axis (gripper heading)
+    t_moved = T_mat_XG - 0.13 * z_axis #113 worked
+
     T = np.eye(4)
     T[:3, :3] = R_mat_XG  
-    T[:3, 3] =T_mat_XG
+    T[:3, 3] =t_moved
     ##
     axis_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.05)
     axis_frame.transform(T)
@@ -163,12 +169,14 @@ for i, grasp in enumerate(grasps):
     angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
     print(i , "   ",angle_deg)
     # Filter: keep only top-down grasps
-    if angle_deg >30 :
+    if angle_deg >45 or t_moved[2]<0.2:
         continue  # Skip if not top-down
 ###    
-    # geometries.append(axis_frame)
+    geometries.append(axis_frame)
     geometries.append(gripper_o3d)
+    selected_index.append(i)
 
 # Show everything in Open3D visualizer
 axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5, origin=[0, 0, 0])
 o3d.visualization.draw_geometries(geometries+[axes])
+print("seleced index of grasp ",selected_index)
