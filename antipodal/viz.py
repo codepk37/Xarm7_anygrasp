@@ -169,7 +169,7 @@ for i, grasp in enumerate(grasps):
     angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
     print(i , "   ",angle_deg)
     # Filter: keep only top-down grasps
-    if angle_deg >45 or t_moved[2]<0.2:
+    if angle_deg >45 or t_moved[2]<0.15:
         continue  # Skip if not top-down
 ###    
     geometries.append(axis_frame)
