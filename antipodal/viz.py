@@ -151,9 +151,7 @@ for i, grasp in enumerate(grasps):
     ##
     R_mat_XG = grasp_worldT[:3, :3]  #xram gripper
     T_mat_XG = grasp_worldT[:3, 3] 
-    # Swap Y and Z axes
-    R_mat_XG[:, [1, 2]] = R_mat_XG[:, [2, 1]]
-    R_mat_XG[:, 0] *= -1
+
 
     theta = -np.pi / 2  # 90 degrees in radians
     Rz_90 = np.array([
