@@ -163,7 +163,7 @@ for i, grasp in enumerate(grasps):
 
     ##grasp
     z_axis = R_mat_XG[:, 2]  # Local z-axis (gripper heading)
-    t_moved = T_mat_XG - 0.08 * z_axis #113 worked
+    t_moved = T_mat_XG - 0.03 * z_axis #113 worked
 
     T = np.eye(4)
     T[:3, :3] = R_mat_XG  
@@ -180,7 +180,7 @@ for i, grasp in enumerate(grasps):
     angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
     print(i , "   ",angle_deg)
     # Filter: keep only top-down grasps
-    if  t_moved[2]<0.145:
+    if  angle_deg>90 or t_moved[2]<0.145:
         continue  # Skip if not top-down
 ###    
     geometries.append(axis_frame)
