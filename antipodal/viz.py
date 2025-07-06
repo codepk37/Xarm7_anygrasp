@@ -10,7 +10,7 @@ import random
 import numpy as np
 import h5py
 import open3d as o3d
-from DA2_tools import create_robotiq_marker
+from DA2_tools import create_panda_marker # create_robotiq_marker
 from scipy.spatial.transform import Rotation as R
 
 def compute_camera_wrt_base(roll, pitch, yaw, x_mm, y_mm, z_mm):
@@ -79,7 +79,7 @@ T_cam_wrt_base = T_cam_wrt_base @rotation_matrix_z #coz image is expected to rot
 print("T_cam_wrt_base is", T_cam_wrt_base)
 
 
-basepath='/home/pavan/Desktop/RA_L/Anygrap_Xarm/real_life/yellow_cylinder/experiment_dir/registered_meshes/'
+basepath= '/home/pavan/Desktop/RA_L/Anygrap_Xarm/antipodal/yellow_cylinder/experiment_dir/registered_meshes/' #'/home/pavan/Desktop/RA_L/Anygrap_Xarm/real_life/yellow_cylinder/experiment_dir/registered_meshes/'
 
 # Load the object mesh
 obj_path = f'{basepath}0.obj'
@@ -126,7 +126,7 @@ geometries = [object_mesh]
 selected_index=[]
 for i, grasp in enumerate(grasps):
     # Create a gripper mesh
-    gripper_trimesh = create_robotiq_marker()
+    gripper_trimesh = create_panda_marker()
 
     # Convert to Open3D if it's a Trimesh mesh
     if hasattr(gripper_trimesh, 'dump'):
@@ -188,6 +188,12 @@ for i, grasp in enumerate(grasps):
     geometries.append(axis_frame)
     geometries.append(gripper_o3d)
     selected_index.append(i)
+    for point in end_points[i]:
+        sphere = o3d.geometry.TriangleMesh.create_sphere(radius=0.005)
+        sphere.translate(point)
+        sphere.transform(T_cam_wrt_base)
+        sphere.paint_uniform_color([1, 0, 0])
+        geometries.append(sphere)
 
 
 
