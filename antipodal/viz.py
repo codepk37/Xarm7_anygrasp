@@ -163,7 +163,7 @@ for i, grasp in enumerate(grasps):
 
     ##grasp
     z_axis = R_mat_XG[:, 2]  # Local z-axis (gripper heading)
-    t_moved = T_mat_XG - 0.03 * z_axis #113 worked
+    t_moved = T_mat_XG - 0.025 * z_axis #113 worked
 
     T = np.eye(4)
     T[:3, :3] = R_mat_XG  
