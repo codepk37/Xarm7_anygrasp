@@ -1,5 +1,5 @@
 
-# use this to get grasps : force_closure) omen@phoenix:~/home2/fc_evaluation/DA2/scripts$ nano posetest_last_pls.py 
+# use this to get grasps : force_closure) omen@phoenix:~/home2/fc_evaluation/DA2/scripts$ nano mod_posetest_last_pls.py 
 
 
 
@@ -10,7 +10,7 @@ import random
 import numpy as np
 import h5py
 import open3d as o3d
-from DA2_tools import create_panda_marker # create_robotiq_marker
+from DA2_tools import create_robotiq_marker #as create_panda_marker # create_robotiq_marker
 from scipy.spatial.transform import Rotation as R
 
 def compute_camera_wrt_base(roll, pitch, yaw, x_mm, y_mm, z_mm):
@@ -79,7 +79,7 @@ T_cam_wrt_base = T_cam_wrt_base @rotation_matrix_z #coz image is expected to rot
 print("T_cam_wrt_base is", T_cam_wrt_base)
 
 
-basepath= '/home/pavan/Desktop/RA_L/Anygrap_Xarm/antipodal/yellow_cylinder/experiment_dir/registered_meshes/' #'/home/pavan/Desktop/RA_L/Anygrap_Xarm/real_life/yellow_cylinder/experiment_dir/registered_meshes/'
+basepath=   'green_bottle/experiment_dir/registered_meshes/' #'/home/pavan/Desktop/RA_L/Anygrap_Xarm/real_life/yellow_cylinder/experiment_dir/registered_meshes/'
 
 # Load the object mesh
 obj_path = f'{basepath}0.obj'
@@ -126,7 +126,7 @@ geometries = [object_mesh]
 selected_index=[]
 for i, grasp in enumerate(grasps):
     # Create a gripper mesh
-    gripper_trimesh = create_panda_marker()
+    gripper_trimesh = create_robotiq_marker()
 
     # Convert to Open3D if it's a Trimesh mesh
     if hasattr(gripper_trimesh, 'dump'):
@@ -152,6 +152,10 @@ for i, grasp in enumerate(grasps):
     R_mat_XG = grasp_worldT[:3, :3]  #xram gripper
     T_mat_XG = grasp_worldT[:3, 3] 
 
+        # Swap Y and Z axes
+    R_mat_XG[:, [1, 2]] = R_mat_XG[:, [2, 1]]
+    R_mat_XG[:, 0] *= -1
+
 
     theta = -np.pi / 2  # 90 degrees in radians
     Rz_90 = np.array([
@@ -163,7 +167,9 @@ for i, grasp in enumerate(grasps):
 
     ##grasp
     z_axis = R_mat_XG[:, 2]  # Local z-axis (gripper heading)
-    t_moved = T_mat_XG - 0.025 * z_axis #113 worked
+    t_moved = T_mat_XG - 0.08 * z_axis #113 worked
+
+
 
     T = np.eye(4)
     T[:3, :3] = R_mat_XG  
@@ -180,7 +186,7 @@ for i, grasp in enumerate(grasps):
     angle_deg = np.rad2deg(np.arccos(np.clip(cos_theta, -1.0, 1.0)))
     print(i , "   ",angle_deg)
     # Filter: keep only top-down grasps
-    if  angle_deg>90 or t_moved[2]<0.145:
+    if   t_moved[2]<0.16: #.145
         continue  # Skip if not top-down
 ###    
     geometries.append(axis_frame)

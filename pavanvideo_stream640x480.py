@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import os
 
-output_dir = './pavanoutput6'
+output_dir = './green_bottle'
 os.makedirs(output_dir, exist_ok=True)
 
 # Initialize RealSense pipeline

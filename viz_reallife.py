@@ -3,24 +3,24 @@ import numpy as np
 import os
 
 # === Set paths ===
-base_dir = "real_life/thermocol/experiment_dir/registered_meshes"
+base_dir = "real_life/green_bottle/experiment_dir/registered_meshes"
 ply_path = os.path.join(base_dir, "scene_complete.ply")
 
 # === Load and trim point cloud ===
 pcd = o3d.io.read_point_cloud(ply_path)
-# points = np.asarray(pcd.points)
+points = np.asarray(pcd.points)
 
-# # Compute Euclidean distance from origin and mask
-# distances = np.linalg.norm(points, axis=1)
-# mask = distances <= 3.0
+# Compute Euclidean distance from origin and mask
+distances = np.linalg.norm(points, axis=1)
+mask = distances <= 3.0
 
-# # Apply mask to points
-# pcd.points = o3d.utility.Vector3dVector(points[mask])
+# Apply mask to points
+pcd.points = o3d.utility.Vector3dVector(points[mask])
 
-# # Apply mask to colors if available
-# if pcd.has_colors():
-#     colors = np.asarray(pcd.colors)
-#     pcd.colors = o3d.utility.Vector3dVector(colors[mask])
+# Apply mask to colors if available
+if pcd.has_colors():
+    colors = np.asarray(pcd.colors)
+    pcd.colors = o3d.utility.Vector3dVector(colors[mask])
 
 # === Load all .obj meshes in the directory ===
 mesh_objs = []

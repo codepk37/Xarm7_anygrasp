@@ -71,7 +71,7 @@ def compute_camera_wrt_base(roll, pitch, yaw, x_mm, y_mm, z_mm):
 
 # Example usage
 T_cam_wrt_base = compute_camera_wrt_base(
-    x_mm=53.9 , y_mm=328 , z_mm=277.3,
+    x_mm=-25.4 , y_mm=328 , z_mm=277.3,
     roll=-175.7 , pitch=-62, yaw=-7.5
 
 )
@@ -191,7 +191,7 @@ def demo(data_dir):
 
 
 
-    gripper_output_subfolder = f"./{data_dir}"
+    gripper_output_subfolder = f"{data_dir}"
     os.makedirs(gripper_output_subfolder, exist_ok=True)
 
     translations =[]
@@ -255,12 +255,13 @@ def demo(data_dir):
     np.save(f"{gripper_output_subfolder}/grasps.npy", gripper_data)
     axis = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.1, origin=[0, 0, 0])
     o3d.visualization.draw_geometries([cloud,axis]+pcds+dots)
-    cloud_filename =  f"./{gripper_output_subfolder}/cloud.ply"
+    cloud_filename =  f"{gripper_output_subfolder}/cloud.ply"
+    print(cloud_filename)
     o3d.io.write_point_cloud(cloud_filename, cloud)
 
 if __name__ == '__main__':
     
-    demo('./pavanoutput6')
+    demo('./antipodal/green_bottle/inputs')
 
 
 

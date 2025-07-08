@@ -1,0 +1,1 @@
+grey cylinder container	/scratch/codepk37/real_life/black_bottle/experiment_dir/sam_outputs/0_rgba.png	/scratch/codepk37/real_life/black_bottle/experiment_dir/sam_outputs/0_inpainting_mask.png	/scratch/codepk37/real_life/black_bottle/experiment_dir/sam_outputs/0_object_crop.png	/scratch/codepk37/real_life/black_bottle/experiment_dir/sam_outputs/0_inpainting_mask_crop.png

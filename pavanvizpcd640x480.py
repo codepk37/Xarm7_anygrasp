@@ -4,8 +4,8 @@ import cv2
 import pyrealsense2 as rs
 
 # Load saved data
-depth_path = "./pavanoutput6/depth.npy"
-rgb_path = "./pavanoutput6/rgb.png"
+depth_path = "./orange_cylinder/depth.npy"
+rgb_path = "./orange_cylinder/rgb.png"
 
 depth = np.load(depth_path)  # depth in mm
 rgb = cv2.imread(rgb_path)
